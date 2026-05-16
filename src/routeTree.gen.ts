@@ -11,6 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentIndexRouteImport } from './routes/student.index'
+import { Route as StudentOrdersRouteImport } from './routes/student.orders'
+import { Route as StudentFavoritesRouteImport } from './routes/student.favorites'
+import { Route as StudentCheckoutRouteImport } from './routes/student.checkout'
+import { Route as StudentCartRouteImport } from './routes/student.cart'
+import { Route as StudentTrackIdRouteImport } from './routes/student.track.$id'
+import { Route as StudentShopIdRouteImport } from './routes/student.shop.$id'
 
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
@@ -22,31 +29,113 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentIndexRoute = StudentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentOrdersRoute = StudentOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentFavoritesRoute = StudentFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentCheckoutRoute = StudentCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentCartRoute = StudentCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentTrackIdRoute = StudentTrackIdRouteImport.update({
+  id: '/track/$id',
+  path: '/track/$id',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentShopIdRoute = StudentShopIdRouteImport.update({
+  id: '/shop/$id',
+  path: '/shop/$id',
+  getParentRoute: () => StudentRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/student': typeof StudentRoute
+  '/student': typeof StudentRouteWithChildren
+  '/student/cart': typeof StudentCartRoute
+  '/student/checkout': typeof StudentCheckoutRoute
+  '/student/favorites': typeof StudentFavoritesRoute
+  '/student/orders': typeof StudentOrdersRoute
+  '/student/': typeof StudentIndexRoute
+  '/student/shop/$id': typeof StudentShopIdRoute
+  '/student/track/$id': typeof StudentTrackIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/student': typeof StudentRoute
+  '/student/cart': typeof StudentCartRoute
+  '/student/checkout': typeof StudentCheckoutRoute
+  '/student/favorites': typeof StudentFavoritesRoute
+  '/student/orders': typeof StudentOrdersRoute
+  '/student': typeof StudentIndexRoute
+  '/student/shop/$id': typeof StudentShopIdRoute
+  '/student/track/$id': typeof StudentTrackIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/student': typeof StudentRoute
+  '/student': typeof StudentRouteWithChildren
+  '/student/cart': typeof StudentCartRoute
+  '/student/checkout': typeof StudentCheckoutRoute
+  '/student/favorites': typeof StudentFavoritesRoute
+  '/student/orders': typeof StudentOrdersRoute
+  '/student/': typeof StudentIndexRoute
+  '/student/shop/$id': typeof StudentShopIdRoute
+  '/student/track/$id': typeof StudentTrackIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/student'
+  fullPaths:
+    | '/'
+    | '/student'
+    | '/student/cart'
+    | '/student/checkout'
+    | '/student/favorites'
+    | '/student/orders'
+    | '/student/'
+    | '/student/shop/$id'
+    | '/student/track/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/student'
-  id: '__root__' | '/' | '/student'
+  to:
+    | '/'
+    | '/student/cart'
+    | '/student/checkout'
+    | '/student/favorites'
+    | '/student/orders'
+    | '/student'
+    | '/student/shop/$id'
+    | '/student/track/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/student'
+    | '/student/cart'
+    | '/student/checkout'
+    | '/student/favorites'
+    | '/student/orders'
+    | '/student/'
+    | '/student/shop/$id'
+    | '/student/track/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  StudentRoute: typeof StudentRoute
+  StudentRoute: typeof StudentRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +154,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/': {
+      id: '/student/'
+      path: '/'
+      fullPath: '/student/'
+      preLoaderRoute: typeof StudentIndexRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/orders': {
+      id: '/student/orders'
+      path: '/orders'
+      fullPath: '/student/orders'
+      preLoaderRoute: typeof StudentOrdersRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/favorites': {
+      id: '/student/favorites'
+      path: '/favorites'
+      fullPath: '/student/favorites'
+      preLoaderRoute: typeof StudentFavoritesRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/checkout': {
+      id: '/student/checkout'
+      path: '/checkout'
+      fullPath: '/student/checkout'
+      preLoaderRoute: typeof StudentCheckoutRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/cart': {
+      id: '/student/cart'
+      path: '/cart'
+      fullPath: '/student/cart'
+      preLoaderRoute: typeof StudentCartRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/track/$id': {
+      id: '/student/track/$id'
+      path: '/track/$id'
+      fullPath: '/student/track/$id'
+      preLoaderRoute: typeof StudentTrackIdRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/shop/$id': {
+      id: '/student/shop/$id'
+      path: '/shop/$id'
+      fullPath: '/student/shop/$id'
+      preLoaderRoute: typeof StudentShopIdRouteImport
+      parentRoute: typeof StudentRoute
+    }
   }
 }
 
+interface StudentRouteChildren {
+  StudentCartRoute: typeof StudentCartRoute
+  StudentCheckoutRoute: typeof StudentCheckoutRoute
+  StudentFavoritesRoute: typeof StudentFavoritesRoute
+  StudentOrdersRoute: typeof StudentOrdersRoute
+  StudentIndexRoute: typeof StudentIndexRoute
+  StudentShopIdRoute: typeof StudentShopIdRoute
+  StudentTrackIdRoute: typeof StudentTrackIdRoute
+}
+
+const StudentRouteChildren: StudentRouteChildren = {
+  StudentCartRoute: StudentCartRoute,
+  StudentCheckoutRoute: StudentCheckoutRoute,
+  StudentFavoritesRoute: StudentFavoritesRoute,
+  StudentOrdersRoute: StudentOrdersRoute,
+  StudentIndexRoute: StudentIndexRoute,
+  StudentShopIdRoute: StudentShopIdRoute,
+  StudentTrackIdRoute: StudentTrackIdRoute,
+}
+
+const StudentRouteWithChildren =
+  StudentRoute._addFileChildren(StudentRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  StudentRoute: StudentRoute,
+  StudentRoute: StudentRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
