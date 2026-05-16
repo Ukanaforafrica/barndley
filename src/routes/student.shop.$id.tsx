@@ -19,7 +19,8 @@ export const Route = createFileRoute("/student/shop/$id")({
 });
 
 function ShopPage() {
-  const { shop } = Route.useLoaderData();
+  const data = Route.useLoaderData() as { shop: typeof shops[number] };
+  const shop = data.shop;
   const cartSnap = useCart();
   const [openProduct, setOpenProduct] = useState<Product | null>(null);
 
