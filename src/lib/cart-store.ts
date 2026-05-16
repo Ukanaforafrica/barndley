@@ -88,7 +88,10 @@ export const cart = {
 
 export function useCart() {
   const [snap, setSnap] = useState(state);
-  useEffect(() => cart.subscribe(() => setSnap({ ...cart.get() })), []);
+  useEffect(() => {
+    const unsub = cart.subscribe(() => setSnap({ ...cart.get() }));
+    return () => { unsub; };
+  }, []);
   return snap;
 }
 
