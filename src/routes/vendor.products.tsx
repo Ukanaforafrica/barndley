@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
 import { vendorNav } from "@/components/VendorNav";
 import { shops, formatNaira } from "@/lib/mock";
-import { useState } from "react";
+import { catalog } from "@/lib/catalog";
+import { SearchSelect } from "@/components/SearchSelect";
+import { useState, useMemo } from "react";
 import { Plus, X, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/vendor/products")({
@@ -67,13 +69,37 @@ function VendorProducts() {
 function ProductSheet({
   product, onClose, onSave
 }: { product: any; onClose: () => void; onSave: (p: any) => void }) {
-  const [name, setName] = useState(product?.name ?? "");
+  const matchedCat = useMemo(
+    () => catalog.find((c) => c.name === product?.category || c.id === product?.category),
+    [product],
+  );
+  const matchedItem = matchedCat?.items.find((i) => i === product?.name);
+
   const [emoji, setEmoji] = useState(product?.emoji ?? "🥫");
-  const [category, setCategory] = useState(product?.category ?? "Grains");
+  const [category, setCategory] = useState<string>(
+    product ? (matchedCat ? matchedCat.name : "Other") : "",
+  );
+  const [customCategory, setCustomCategory] = useState(
+    product && !matchedCat ? product.category ?? "" : "",
+  );
+  const [productName, setProductName] = useState<string>(
+    product ? (matchedItem ? matchedItem : "Other") : "",
+  );
+  const [customProductName, setCustomProductName] = useState(
+    product && !matchedItem ? product.name ?? "" : "",
+  );
   const [description, setDescription] = useState(product?.description ?? "");
   const [measurements, setMeasurements] = useState<{id:string;label:string;price:number}[]>(
     product?.measurements ?? [{ id: "m1", label: "", price: 0 }],
   );
+
+  const categoryOptions = ["Other", ...catalog.map((c) => c.name)];
+  const activeCat = catalog.find((c) => c.name === category);
+  const productOptions = activeCat ? ["Other", ...activeCat.items] : ["Other"];
+
+  const finalCategory = category === "Other" ? customCategory.trim() : category;
+  const finalName = productName === "Other" ? customProductName.trim() : productName;
+  const canSave = !!finalCategory && !!finalName && measurements.some((m) => m.label && m.price > 0);
 
   function addRow() {
     setMeasurements((m) => [...m, { id: "m" + (m.length + 1), label: "", price: 0 }]);
@@ -95,12 +121,59 @@ function ProductSheet({
         </div>
 
         <div className="space-y-3">
-          <div className="flex gap-2">
-            <input value={emoji} onChange={(e)=>setEmoji(e.target.value)} maxLength={2} className="w-14 h-12 text-2xl text-center rounded-xl bg-card border border-border"/>
-            <input value={name} onChange={(e)=>setName(e.target.value)} placeholder="Product name" className="flex-1 px-4 h-12 rounded-xl bg-card border border-border"/>
+          <div>
+            <label className="text-[0.7rem] font-semibold text-foreground/60 ml-1">CATEGORY</label>
+            <div className="mt-1">
+              <SearchSelect
+                value={category}
+                onChange={(v) => {
+                  setCategory(v);
+                  setProductName("");
+                  if (v !== "Other") setCustomCategory("");
+                }}
+                options={categoryOptions}
+                placeholder="Select a category"
+              />
+            </div>
+            {category === "Other" && (
+              <input
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                placeholder="Custom category name"
+                className="mt-2 w-full px-4 h-11 rounded-xl bg-card border border-border text-sm animate-in fade-in-0 slide-in-from-top-1"
+              />
+            )}
           </div>
-          <input value={category} onChange={(e)=>setCategory(e.target.value)} placeholder="Category" className="w-full px-4 h-11 rounded-xl bg-card border border-border text-sm"/>
-          <textarea value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Short description" rows={2} className="w-full p-3 rounded-xl bg-card border border-border text-sm"/>
+
+          <div>
+            <label className="text-[0.7rem] font-semibold text-foreground/60 ml-1">PRODUCT NAME</label>
+            <div className="mt-1">
+              <SearchSelect
+                value={productName}
+                onChange={(v) => {
+                  setProductName(v);
+                  if (v !== "Other") setCustomProductName("");
+                }}
+                options={productOptions}
+                placeholder={category ? "Select a product" : "Pick category first"}
+                disabled={!category}
+              />
+            </div>
+            {productName === "Other" && (
+              <input
+                value={customProductName}
+                onChange={(e) => setCustomProductName(e.target.value)}
+                placeholder="Custom product name"
+                className="mt-2 w-full px-4 h-11 rounded-xl bg-card border border-border text-sm animate-in fade-in-0 slide-in-from-top-1"
+              />
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input value={emoji} onChange={(e)=>setEmoji(e.target.value)} maxLength={2} className="w-14 h-12 text-2xl text-center rounded-xl bg-card border border-border"/>
+            <span className="text-[0.7rem] text-foreground/50">Emoji icon</span>
+          </div>
+          <textarea value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Short description (optional)" rows={2} className="w-full p-3 rounded-xl bg-card border border-border text-sm"/>
         </div>
 
         <div className="mt-5">
@@ -137,13 +210,18 @@ function ProductSheet({
         </div>
 
         <button
+          disabled={!canSave}
           onClick={() => onSave({
             id: product?.id ?? "p" + Date.now(),
-            name, emoji, category, description,
+            name: finalName,
+            customName: productName === "Other" ? customProductName.trim() : undefined,
+            emoji,
+            category: finalCategory,
+            description,
             available: true,
             measurements: measurements.filter(m=>m.label && m.price>0),
           })}
-          className="mt-6 w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold"
+          className="mt-6 w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Save product
         </button>
