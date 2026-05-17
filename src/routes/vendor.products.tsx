@@ -210,13 +210,18 @@ function ProductSheet({
         </div>
 
         <button
+          disabled={!canSave}
           onClick={() => onSave({
             id: product?.id ?? "p" + Date.now(),
-            name, emoji, category, description,
+            name: finalName,
+            customName: productName === "Other" ? customProductName.trim() : undefined,
+            emoji,
+            category: finalCategory,
+            description,
             available: true,
             measurements: measurements.filter(m=>m.label && m.price>0),
           })}
-          className="mt-6 w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold"
+          className="mt-6 w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Save product
         </button>
