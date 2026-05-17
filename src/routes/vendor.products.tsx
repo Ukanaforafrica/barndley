@@ -4,6 +4,7 @@ import { vendorNav } from "@/components/VendorNav";
 import { shops, formatNaira } from "@/lib/mock";
 import { catalog } from "@/lib/catalog";
 import { SearchSelect } from "@/components/SearchSelect";
+import { EmojiPicker } from "@/components/EmojiPicker";
 import { useState, useMemo } from "react";
 import { Plus, X, Trash2 } from "lucide-react";
 
