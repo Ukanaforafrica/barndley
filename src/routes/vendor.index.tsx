@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
 import { vendorNav } from "@/components/VendorNav";
 import { formatNaira } from "@/lib/mock";
 import { useState } from "react";
-import { Bell, CircleDollarSign, ShoppingBag, Star, TrendingUp } from "lucide-react";
+import { Bell, CircleDollarSign, ShoppingBag, Star, TrendingUp, Link2, Check } from "lucide-react";
 
 export const Route = createFileRoute("/vendor/")({
   head: () => ({ meta: [{ title: "Shop dashboard — Campus Basket" }] }),
