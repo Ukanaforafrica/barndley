@@ -3,6 +3,7 @@ import { MobileShell } from "@/components/MobileShell";
 import { studentNav } from "@/components/StudentNav";
 import { formatNaira } from "@/lib/mock";
 import { Wallet, Plus, ArrowDownLeft, ArrowUpRight, MapPin, Phone, Mail, LogOut, ChevronRight, Shield } from "lucide-react";
+import { EditProfileButton, useProfile } from "@/components/EditProfileDialog";
 
 export const Route = createFileRoute("/student/profile")({
   head: () => ({ meta: [{ title: "You — Campus Basket" }] }),
@@ -16,20 +17,39 @@ const tx = [
   { id: "t4", label: "Referral bonus", amount: 500, when: "Mon", kind: "in" as const },
 ];
 
+function initials(name: string) {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map((s) => s[0]?.toUpperCase()).join("") || "?";
+}
+
 function StudentProfile() {
+  const [profile, setProfile] = useProfile("cb.student.profile", {
+    name: "Adaeze Okafor",
+    email: "adaeze.o@uni.edu.ng",
+    phone: "+234 805 221 8890",
+    address: "Indep. Hall, Rm 214",
+  });
+
   return (
     <MobileShell nav={studentNav} title="Your profile">
-      {/* Identity */}
       <div className="card-soft p-4 flex items-center gap-3">
-        <div className="h-14 w-14 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center font-display text-xl">AO</div>
+        <div className="h-14 w-14 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center font-display text-xl">{initials(profile.name)}</div>
         <div className="flex-1 min-w-0">
-          <div className="font-display text-lg truncate">Adaeze Okafor</div>
-          <div className="text-xs text-foreground/60">Student · Indep. Hall, Rm 214</div>
+          <div className="font-display text-lg truncate">{profile.name}</div>
+          <div className="text-xs text-foreground/60 truncate">Student · {profile.address}</div>
         </div>
-        <span className="chip">Verified</span>
+        <EditProfileButton
+          title="Edit your profile"
+          values={profile}
+          onSave={setProfile}
+          fields={[
+            { key: "name", label: "Full name" },
+            { key: "email", label: "Email", type: "email" },
+            { key: "phone", label: "Phone", type: "tel" },
+            { key: "address", label: "Delivery address" },
+          ]}
+        />
       </div>
 
-      {/* Wallet */}
       <div className="card-soft p-5 mt-4 bg-gradient-to-br from-primary-soft to-accent-soft">
         <div className="flex items-center gap-2 text-xs text-foreground/70">
           <Wallet className="size-3.5" /> Basket wallet
@@ -43,7 +63,6 @@ function StudentProfile() {
         </div>
       </div>
 
-      {/* Recent transactions */}
       <div className="card-soft p-4 mt-4">
         <div className="text-xs font-semibold text-foreground/70 mb-2">RECENT ACTIVITY</div>
         <ul className="divide-y divide-border/60">
@@ -64,11 +83,10 @@ function StudentProfile() {
         </ul>
       </div>
 
-      {/* Profile details */}
       <div className="card-soft mt-4 divide-y divide-border/60">
-        <Row icon={<Mail className="size-4" />} label="Email" value="adaeze.o@uni.edu.ng" />
-        <Row icon={<Phone className="size-4" />} label="Phone" value="+234 805 221 8890" />
-        <Row icon={<MapPin className="size-4" />} label="Delivery address" value="Indep. Hall, Rm 214" />
+        <Row icon={<Mail className="size-4" />} label="Email" value={profile.email} />
+        <Row icon={<Phone className="size-4" />} label="Phone" value={profile.phone} />
+        <Row icon={<MapPin className="size-4" />} label="Delivery address" value={profile.address} />
         <Row icon={<Shield className="size-4" />} label="Account" value="Verified student" />
       </div>
 
