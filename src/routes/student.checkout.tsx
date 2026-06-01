@@ -30,6 +30,18 @@ function CheckoutPage() {
 
   return (
     <MobileShell nav={studentNav} title="Checkout">
+      {bundle && (
+        <div className="card-soft p-3 flex items-start gap-2 bg-accent-soft border-accent/30 mt-1">
+          <Sparkles className="size-4 text-accent mt-0.5" />
+          <div className="text-xs">
+            <div className="font-semibold">Bundle order · {groups.length} pickups</div>
+            <div className="text-foreground/70 mt-0.5">
+              Rider will collect from {groups.map(g => g.shopName).join(", ")} and deliver together.
+            </div>
+          </div>
+        </div>
+      )}
+
       <Section title="Deliver to">
         <div className="card-soft p-3 flex items-start gap-3">
           <MapPin className="size-5 text-primary mt-0.5" />
