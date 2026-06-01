@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
 import { studentNav } from "@/components/StudentNav";
-import { cart, useCart, cartTotal } from "@/lib/cart-store";
+import { cart, useCart, cartTotal, groupByShop, isBundle } from "@/lib/cart-store";
 import { formatNaira } from "@/lib/mock";
-import { MapPin, Wallet, Banknote, Check } from "lucide-react";
+import { MapPin, Wallet, Banknote, Check, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/student/checkout")({
@@ -18,7 +18,10 @@ function CheckoutPage() {
   const [hall, setHall] = useState("Independence Hall");
   const [room, setRoom] = useState("Room 214");
   const [note, setNote] = useState("");
-  const total = cartTotal(snap.lines) + 350 + 100;
+  const groups = groupByShop(snap.lines);
+  const bundle = isBundle(snap.lines);
+  const delivery = snap.lines.length === 0 ? 0 : 350 + Math.max(0, groups.length - 1) * 200;
+  const total = cartTotal(snap.lines) + delivery + 100;
 
   function place() {
     cart.clear();
