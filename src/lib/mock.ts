@@ -20,6 +20,7 @@ export type Shop = {
   open: boolean;
   hours: string;
   hue: string;
+  area: string;
   products: Product[];
 };
 
