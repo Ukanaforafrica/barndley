@@ -182,14 +182,31 @@ function CrossShopSearch({ onClose }: { onClose: () => void }) {
         <div className="flex items-center justify-between">
           <div>
             <div className="font-display text-lg">Search nearby shops</div>
-            <div className="text-xs text-foreground/60">Add items from any shop in close proximity</div>
+            <div className="text-xs text-foreground/60">
+              {lockedArea
+                ? `Paired to ${lockedArea} only`
+                : "Add items from any shop in close proximity"}
+            </div>
           </div>
           <button onClick={onClose} className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center">
             <X className="size-4"/>
           </button>
         </div>
 
+        {lockedArea && (
+          <div className="mt-3 flex items-start gap-2 p-3 rounded-xl bg-accent-soft border border-accent/30 text-xs">
+            <MapPin className="size-4 text-accent mt-0.5 shrink-0"/>
+            <div>
+              <div className="font-semibold">Only {lockedArea} shops are pair-eligible</div>
+              <div className="text-foreground/70 mt-0.5">
+                Pairing is locked to the area of your first shop so your rider can do one short multi-stop trip.
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mt-4 flex items-center gap-2 px-3 h-11 rounded-xl bg-secondary">
+
           <Search className="size-4 text-foreground/50"/>
           <input
             autoFocus
