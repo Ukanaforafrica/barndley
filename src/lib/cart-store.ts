@@ -5,6 +5,7 @@ export type CartLine = {
   shopId: string;
   shopName: string;
   shopEmoji: string;
+  shopArea: string;
   productId: string;
   productName: string;
   emoji: string;
