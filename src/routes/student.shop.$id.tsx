@@ -22,13 +22,17 @@ function ShopPage() {
   const data = Route.useLoaderData() as { shop: typeof shops[number] };
   const shop = data.shop;
   const cartSnap = useCart();
+  const lockedArea = cartArea(cartSnap.lines);
+  const blocked = lockedArea !== null && lockedArea !== shop.area;
   const [openProduct, setOpenProduct] = useState<Product | null>(null);
+  const [blockMsg, setBlockMsg] = useState<string | null>(null);
 
   return (
     <MobileShell nav={studentNav}>
       <Link to="/student" className="inline-flex items-center gap-1 text-sm font-semibold text-foreground/70">
         <ArrowLeft className="size-4" /> Back
       </Link>
+
 
       <div className={`mt-3 card-soft overflow-hidden`}>
         <div className={`h-32 bg-gradient-to-br ${shop.hue} flex items-end p-4`}>
