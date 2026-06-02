@@ -37,6 +37,7 @@ export const shops: Shop[] = [
     open: true,
     hours: "7:00 — 21:00",
     hue: "from-[oklch(0.94_0.06_148)] to-[oklch(0.95_0.05_65)]",
+    area: "Ekosodin",
     products: [
       {
         id: "rice",
