@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
 import { studentNav } from "@/components/StudentNav";
-import { cart, useCart, cartTotal, groupByShop, isBundle } from "@/lib/cart-store";
+import { cart, useCart, cartTotal, groupByShop, isBundle, cartArea } from "@/lib/cart-store";
 import { shops, formatNaira, type Product, type Measurement, type Shop } from "@/lib/mock";
-import { Minus, Plus, Trash2, ArrowLeft, Search, X, Sparkles, Store } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, Search, X, Sparkles, Store, MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/student/cart")({
@@ -141,14 +141,22 @@ function CartPage() {
 }
 
 function CrossShopSearch({ onClose }: { onClose: () => void }) {
+  const snap = useCart();
+  const lockedArea = cartArea(snap.lines);
   const [q, setQ] = useState("");
   const [picked, setPicked] = useState<{ shop: Shop; product: Product } | null>(null);
+
+  // Only shops in the same area as the first selected shop can be paired.
+  const eligibleShops = useMemo(
+    () => (lockedArea ? shops.filter((s) => s.area === lockedArea) : shops),
+    [lockedArea],
+  );
 
   const results = useMemo(() => {
     if (!q.trim()) return [];
     const needle = q.toLowerCase();
     const out: { shop: Shop; product: Product }[] = [];
-    for (const s of shops) {
+    for (const s of eligibleShops) {
       for (const p of s.products) {
         if (!p.available) continue;
         if (
@@ -161,7 +169,8 @@ function CrossShopSearch({ onClose }: { onClose: () => void }) {
       }
     }
     return out.sort((a, b) => a.shop.distanceKm - b.shop.distanceKm);
-  }, [q]);
+  }, [q, eligibleShops]);
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
@@ -173,14 +182,31 @@ function CrossShopSearch({ onClose }: { onClose: () => void }) {
         <div className="flex items-center justify-between">
           <div>
             <div className="font-display text-lg">Search nearby shops</div>
-            <div className="text-xs text-foreground/60">Add items from any shop in close proximity</div>
+            <div className="text-xs text-foreground/60">
+              {lockedArea
+                ? `Paired to ${lockedArea} only`
+                : "Add items from any shop in close proximity"}
+            </div>
           </div>
           <button onClick={onClose} className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center">
             <X className="size-4"/>
           </button>
         </div>
 
+        {lockedArea && (
+          <div className="mt-3 flex items-start gap-2 p-3 rounded-xl bg-accent-soft border border-accent/30 text-xs">
+            <MapPin className="size-4 text-accent mt-0.5 shrink-0"/>
+            <div>
+              <div className="font-semibold">Only {lockedArea} shops are pair-eligible</div>
+              <div className="text-foreground/70 mt-0.5">
+                Pairing is locked to the area of your first shop so your rider can do one short multi-stop trip.
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mt-4 flex items-center gap-2 px-3 h-11 rounded-xl bg-secondary">
+
           <Search className="size-4 text-foreground/50"/>
           <input
             autoFocus
@@ -215,7 +241,7 @@ function CrossShopSearch({ onClose }: { onClose: () => void }) {
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-sm truncate">{product.name}</div>
                     <div className="text-[0.7rem] text-foreground/60 flex items-center gap-1 truncate">
-                      <Store className="size-3 shrink-0"/> {shop.name} · {shop.distanceKm} km
+                      <Store className="size-3 shrink-0"/> {shop.name} · {shop.area} · {shop.distanceKm} km
                     </div>
                   </div>
                   <div className="text-xs text-foreground/70 shrink-0">

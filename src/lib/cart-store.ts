@@ -5,6 +5,7 @@ export type CartLine = {
   shopId: string;
   shopName: string;
   shopEmoji: string;
+  shopArea: string;
   productId: string;
   productName: string;
   emoji: string;
@@ -40,7 +41,15 @@ const emit = () => listeners.forEach((l) => l());
 
 export const cart = {
   get: () => state,
-  add(shop: Shop, p: Product, m: Measurement, qty = 1) {
+  add(shop: Shop, p: Product, m: Measurement, qty = 1): { ok: true } | { ok: false; reason: string } {
+    // Enforce same-area pairing — pairing is determined by the first shop selected.
+    const lockedArea = state.lines[0]?.shopArea;
+    if (lockedArea && lockedArea !== shop.area) {
+      return {
+        ok: false,
+        reason: `Your basket is paired with shops in ${lockedArea}. ${shop.name} is in ${shop.area} — only shops within ${lockedArea} can be added. Clear basket to start over.`,
+      };
+    }
     const existing = state.lines.find(
       (l) =>
         l.shopId === shop.id &&
@@ -53,6 +62,7 @@ export const cart = {
         shopId: shop.id,
         shopName: shop.name,
         shopEmoji: shop.emoji,
+        shopArea: shop.area,
         productId: p.id,
         productName: p.name,
         emoji: p.emoji,
@@ -62,6 +72,7 @@ export const cart = {
     state = { lines: [...state.lines] };
     persist();
     emit();
+    return { ok: true };
   },
   setQty(shopId: string, productId: string, measurementId: string, qty: number) {
     state.lines = state.lines
@@ -119,3 +130,5 @@ export function groupByShop(lines: CartLine[]) {
 
 export const isBundle = (lines: CartLine[]) =>
   new Set(lines.map((l) => l.shopId)).size > 1;
+
+export const cartArea = (lines: CartLine[]) => lines[0]?.shopArea ?? null;

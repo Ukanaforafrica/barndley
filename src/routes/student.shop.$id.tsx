@@ -2,8 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
 import { studentNav } from "@/components/StudentNav";
 import { shops, formatNaira, type Product, type Measurement } from "@/lib/mock";
-import { cart, useCart, cartTotal } from "@/lib/cart-store";
-import { ArrowLeft, Star, Clock, MapPin, Heart, ShoppingBasket, Plus, Check } from "lucide-react";
+import { cart, useCart, cartTotal, cartArea } from "@/lib/cart-store";
+import { ArrowLeft, Star, Clock, MapPin, Heart, ShoppingBasket, Plus, Check, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/student/shop/$id")({
@@ -22,13 +22,17 @@ function ShopPage() {
   const data = Route.useLoaderData() as { shop: typeof shops[number] };
   const shop = data.shop;
   const cartSnap = useCart();
+  const lockedArea = cartArea(cartSnap.lines);
+  const blocked = lockedArea !== null && lockedArea !== shop.area;
   const [openProduct, setOpenProduct] = useState<Product | null>(null);
+  const [blockMsg, setBlockMsg] = useState<string | null>(null);
 
   return (
     <MobileShell nav={studentNav}>
       <Link to="/student" className="inline-flex items-center gap-1 text-sm font-semibold text-foreground/70">
         <ArrowLeft className="size-4" /> Back
       </Link>
+
 
       <div className={`mt-3 card-soft overflow-hidden`}>
         <div className={`h-32 bg-gradient-to-br ${shop.hue} flex items-end p-4`}>
@@ -43,13 +47,27 @@ function ShopPage() {
           <div className="mt-3 flex items-center gap-3 text-xs text-foreground/70 flex-wrap">
             <span className="inline-flex items-center gap-1"><Star className="size-3.5 fill-accent text-accent"/>{shop.rating} ({shop.reviews})</span>
             <span className="inline-flex items-center gap-1"><Clock className="size-3.5"/>{shop.hours}</span>
-            <span className="inline-flex items-center gap-1"><MapPin className="size-3.5"/>{shop.distanceKm} km</span>
+            <span className="inline-flex items-center gap-1"><MapPin className="size-3.5"/>{shop.area} · {shop.distanceKm} km</span>
             <span className={"chip " + (shop.open ? "" : "bg-foreground text-background")}>
               {shop.open ? "Open now" : "Closed"}
             </span>
           </div>
         </div>
       </div>
+
+      {blocked && (
+        <div className="mt-3 card-soft p-3 flex items-start gap-2 border border-destructive/30 bg-destructive/5">
+          <AlertTriangle className="size-4 text-destructive mt-0.5 shrink-0"/>
+          <div className="text-xs">
+            <div className="font-semibold">Different area — can't pair</div>
+            <div className="text-foreground/70 mt-0.5">
+              Your basket is paired with <b>{lockedArea}</b> shops. {shop.name} is in <b>{shop.area}</b>. Finish or clear your basket to shop here.
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       <h3 className="font-display text-lg mt-6 mb-2">Available products</h3>
       <div className="grid grid-cols-2 gap-3">
@@ -87,11 +105,53 @@ function ShopPage() {
           product={openProduct}
           onClose={() => setOpenProduct(null)}
           onAdd={(m) => {
-            cart.add(shop, openProduct, m);
+            const result = cart.add(shop, openProduct, m);
+            if (!result.ok) {
+              setBlockMsg(result.reason);
+            }
             setOpenProduct(null);
           }}
         />
       )}
+
+      {blockMsg && (
+        <div className="fixed inset-0 z-[55] flex items-end justify-center" onClick={() => setBlockMsg(null)}>
+          <div className="absolute inset-0 bg-foreground/30 backdrop-blur-sm" />
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-background rounded-t-3xl w-full max-w-[480px] p-5 pb-7 shadow-2xl"
+          >
+            <div className="mx-auto h-1.5 w-10 rounded-full bg-border mb-4" />
+            <div className="flex items-start gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center">
+                <AlertTriangle className="size-5 text-destructive" />
+              </div>
+              <div className="flex-1">
+                <div className="font-display text-lg leading-tight">Can't pair these shops</div>
+                <p className="text-sm text-foreground/70 mt-1">{blockMsg}</p>
+              </div>
+            </div>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setBlockMsg(null)}
+                className="py-3 rounded-2xl bg-secondary font-semibold text-sm"
+              >
+                Keep basket
+              </button>
+              <button
+                onClick={() => {
+                  cart.clear();
+                  setBlockMsg(null);
+                }}
+                className="py-3 rounded-2xl bg-destructive text-destructive-foreground font-semibold text-sm"
+              >
+                Clear & start here
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {cartSnap.lines.length > 0 && (
         <Link
