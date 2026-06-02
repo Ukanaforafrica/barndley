@@ -60,50 +60,75 @@ function StudentHome() {
         )}
       </div>
 
+      {lockedArea && (
+        <div className="mt-5 card-soft p-3 flex items-start gap-2 bg-accent-soft border-accent/30">
+          <Lock className="size-4 text-accent mt-0.5"/>
+          <div className="text-xs">
+            <div className="font-semibold">Paired to {lockedArea}</div>
+            <div className="text-foreground/70 mt-0.5">
+              You can only add from shops in <b>{lockedArea}</b> while this basket is open. Other areas are dimmed.
+            </div>
+          </div>
+        </div>
+      )}
+
       <h2 className="font-display text-xl mt-6 mb-3">Shops near you</h2>
       <div className="space-y-3">
-        {filtered.map((s) => (
-          <Link
-            to="/student/shop/$id"
-            params={{ id: s.id }}
-            key={s.id}
-            className={`block card-soft overflow-hidden hover:shadow-md transition-shadow`}
-          >
-            <div className={`h-24 bg-gradient-to-br ${s.hue} flex items-end p-3`}>
-              <span className="text-3xl">{s.emoji}</span>
-              {!s.open && (
-                <span className="ml-auto chip bg-foreground text-background">
-                  Closed
+        {filtered.map((s) => {
+          const offArea = !!lockedArea && s.area !== lockedArea;
+          return (
+            <Link
+              to="/student/shop/$id"
+              params={{ id: s.id }}
+              key={s.id}
+              className={
+                "block card-soft overflow-hidden hover:shadow-md transition-shadow relative " +
+                (offArea ? "opacity-50" : "")
+              }
+            >
+              <div className={`h-24 bg-gradient-to-br ${s.hue} flex items-end p-3`}>
+                <span className="text-3xl">{s.emoji}</span>
+                <span className="ml-auto chip bg-background/80 text-foreground">
+                  <MapPin className="size-3 inline -mt-0.5 mr-0.5"/>{s.area}
                 </span>
-              )}
-            </div>
-            <div className="p-3">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-display text-[1.05rem] leading-tight">
-                    {s.name}
+              </div>
+              <div className="p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-display text-[1.05rem] leading-tight truncate">
+                      {s.name}
+                    </div>
+                    <div className="text-xs text-foreground/60 mt-0.5">
+                      {s.tagline}
+                    </div>
                   </div>
-                  <div className="text-xs text-foreground/60 mt-0.5">
-                    {s.tagline}
-                  </div>
+                  {!s.open && (
+                    <span className="chip bg-foreground text-background shrink-0">Closed</span>
+                  )}
+                </div>
+                <div className="mt-3 flex items-center gap-3 text-xs text-foreground/70 flex-wrap">
+                  <span className="inline-flex items-center gap-1">
+                    <Star className="size-3.5 fill-accent text-accent" />
+                    {s.rating} <span className="text-foreground/40">({s.reviews})</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="size-3.5" /> {s.etaMin} min
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="size-3.5" /> {s.distanceKm} km
+                  </span>
+                  {offArea && (
+                    <span className="chip bg-foreground/10 text-foreground/70 ml-auto">
+                      <Lock className="size-3 inline -mt-0.5 mr-0.5"/>Off-area
+                    </span>
+                  )}
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-3 text-xs text-foreground/70">
-                <span className="inline-flex items-center gap-1">
-                  <Star className="size-3.5 fill-accent text-accent" />
-                  {s.rating} <span className="text-foreground/40">({s.reviews})</span>
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="size-3.5" /> {s.etaMin} min
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="size-3.5" /> {s.distanceKm} km
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
+
 
       {cart.lines.length > 0 && (
         <Link
