@@ -141,14 +141,22 @@ function CartPage() {
 }
 
 function CrossShopSearch({ onClose }: { onClose: () => void }) {
+  const snap = useCart();
+  const lockedArea = cartArea(snap.lines);
   const [q, setQ] = useState("");
   const [picked, setPicked] = useState<{ shop: Shop; product: Product } | null>(null);
+
+  // Only shops in the same area as the first selected shop can be paired.
+  const eligibleShops = useMemo(
+    () => (lockedArea ? shops.filter((s) => s.area === lockedArea) : shops),
+    [lockedArea],
+  );
 
   const results = useMemo(() => {
     if (!q.trim()) return [];
     const needle = q.toLowerCase();
     const out: { shop: Shop; product: Product }[] = [];
-    for (const s of shops) {
+    for (const s of eligibleShops) {
       for (const p of s.products) {
         if (!p.available) continue;
         if (
@@ -161,7 +169,8 @@ function CrossShopSearch({ onClose }: { onClose: () => void }) {
       }
     }
     return out.sort((a, b) => a.shop.distanceKm - b.shop.distanceKm);
-  }, [q]);
+  }, [q, eligibleShops]);
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
