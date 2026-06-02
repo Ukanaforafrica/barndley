@@ -2,8 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
 import { studentNav } from "@/components/StudentNav";
 import { shops, formatNaira, type Product, type Measurement } from "@/lib/mock";
-import { cart, useCart, cartTotal } from "@/lib/cart-store";
-import { ArrowLeft, Star, Clock, MapPin, Heart, ShoppingBasket, Plus, Check } from "lucide-react";
+import { cart, useCart, cartTotal, cartArea } from "@/lib/cart-store";
+import { ArrowLeft, Star, Clock, MapPin, Heart, ShoppingBasket, Plus, Check, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/student/shop/$id")({
