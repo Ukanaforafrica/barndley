@@ -47,11 +47,25 @@ function ShopPage() {
           <div className="mt-3 flex items-center gap-3 text-xs text-foreground/70 flex-wrap">
             <span className="inline-flex items-center gap-1"><Star className="size-3.5 fill-accent text-accent"/>{shop.rating} ({shop.reviews})</span>
             <span className="inline-flex items-center gap-1"><Clock className="size-3.5"/>{shop.hours}</span>
-            <span className="inline-flex items-center gap-1"><MapPin className="size-3.5"/>{shop.distanceKm} km</span>
+            <span className="inline-flex items-center gap-1"><MapPin className="size-3.5"/>{shop.area} · {shop.distanceKm} km</span>
             <span className={"chip " + (shop.open ? "" : "bg-foreground text-background")}>
               {shop.open ? "Open now" : "Closed"}
             </span>
           </div>
+        </div>
+      </div>
+
+      {blocked && (
+        <div className="mt-3 card-soft p-3 flex items-start gap-2 border border-destructive/30 bg-destructive/5">
+          <AlertTriangle className="size-4 text-destructive mt-0.5 shrink-0"/>
+          <div className="text-xs">
+            <div className="font-semibold">Different area — can't pair</div>
+            <div className="text-foreground/70 mt-0.5">
+              Your basket is paired with <b>{lockedArea}</b> shops. {shop.name} is in <b>{shop.area}</b>. Finish or clear your basket to shop here.
+            </div>
+          </div>
+        </div>
+      )}
         </div>
       </div>
 
