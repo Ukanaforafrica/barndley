@@ -105,11 +105,53 @@ function ShopPage() {
           product={openProduct}
           onClose={() => setOpenProduct(null)}
           onAdd={(m) => {
-            cart.add(shop, openProduct, m);
+            const result = cart.add(shop, openProduct, m);
+            if (!result.ok) {
+              setBlockMsg(result.reason);
+            }
             setOpenProduct(null);
           }}
         />
       )}
+
+      {blockMsg && (
+        <div className="fixed inset-0 z-[55] flex items-end justify-center" onClick={() => setBlockMsg(null)}>
+          <div className="absolute inset-0 bg-foreground/30 backdrop-blur-sm" />
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-background rounded-t-3xl w-full max-w-[480px] p-5 pb-7 shadow-2xl"
+          >
+            <div className="mx-auto h-1.5 w-10 rounded-full bg-border mb-4" />
+            <div className="flex items-start gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center">
+                <AlertTriangle className="size-5 text-destructive" />
+              </div>
+              <div className="flex-1">
+                <div className="font-display text-lg leading-tight">Can't pair these shops</div>
+                <p className="text-sm text-foreground/70 mt-1">{blockMsg}</p>
+              </div>
+            </div>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setBlockMsg(null)}
+                className="py-3 rounded-2xl bg-secondary font-semibold text-sm"
+              >
+                Keep basket
+              </button>
+              <button
+                onClick={() => {
+                  cart.clear();
+                  setBlockMsg(null);
+                }}
+                className="py-3 rounded-2xl bg-destructive text-destructive-foreground font-semibold text-sm"
+              >
+                Clear & start here
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {cartSnap.lines.length > 0 && (
         <Link
