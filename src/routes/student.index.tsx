@@ -13,10 +13,12 @@ export const Route = createFileRoute("/student/")({
 
 function StudentHome() {
   const cart = useCart();
+  const lockedArea = cartArea(cart.lines);
   const [q, setQ] = useState("");
   const filtered = shops.filter(
     (s) =>
       s.name.toLowerCase().includes(q.toLowerCase()) ||
+      s.area.toLowerCase().includes(q.toLowerCase()) ||
       s.products.some((p) => p.name.toLowerCase().includes(q.toLowerCase())),
   );
 
