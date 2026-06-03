@@ -78,8 +78,12 @@ function ShopPage() {
             onClick={() => setOpenProduct(p)}
             className="card-soft p-3 text-left disabled:opacity-50"
           >
-            <div className="h-16 rounded-xl bg-primary-soft/60 flex items-center justify-center text-3xl mb-2">
-              {p.emoji}
+            <div className="h-16 rounded-xl bg-primary-soft/60 flex items-center justify-center text-3xl mb-2 overflow-hidden">
+              {p.photos && p.photos[0] ? (
+                <img src={p.photos[0]} alt={p.name} className="h-full w-full object-cover" />
+              ) : (
+                p.emoji
+              )}
             </div>
             <div className="font-semibold text-sm leading-tight">{p.name}</div>
             <div className="text-[0.7rem] text-foreground/60 mt-0.5">{p.category}</div>
