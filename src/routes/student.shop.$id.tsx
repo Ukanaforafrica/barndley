@@ -78,8 +78,12 @@ function ShopPage() {
             onClick={() => setOpenProduct(p)}
             className="card-soft p-3 text-left disabled:opacity-50"
           >
-            <div className="h-16 rounded-xl bg-primary-soft/60 flex items-center justify-center text-3xl mb-2">
-              {p.emoji}
+            <div className="h-16 rounded-xl bg-primary-soft/60 flex items-center justify-center text-3xl mb-2 overflow-hidden">
+              {p.photos && p.photos[0] ? (
+                <img src={p.photos[0]} alt={p.name} className="h-full w-full object-cover" />
+              ) : (
+                p.emoji
+              )}
             </div>
             <div className="font-semibold text-sm leading-tight">{p.name}</div>
             <div className="text-[0.7rem] text-foreground/60 mt-0.5">{p.category}</div>
@@ -187,6 +191,20 @@ function MeasurementSheet({
         className="relative bg-background rounded-t-3xl w-full max-w-[480px] p-5 pb-7 shadow-2xl"
       >
         <div className="mx-auto h-1.5 w-10 rounded-full bg-border mb-4" />
+        {product.photos && product.photos.length > 0 && (
+          <div className="-mx-5 mb-4 px-5 overflow-x-auto">
+            <div className="flex gap-2">
+              {product.photos.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt={`${product.name} ${i+1}`}
+                  className="h-40 w-40 object-cover rounded-2xl shrink-0 border border-border"
+                />
+              ))}
+            </div>
+          </div>
+        )}
         <div className="flex items-start gap-3">
           <div className="h-14 w-14 rounded-2xl bg-primary-soft flex items-center justify-center text-3xl">
             {product.emoji}
