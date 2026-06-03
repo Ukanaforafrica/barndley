@@ -187,6 +187,20 @@ function MeasurementSheet({
         className="relative bg-background rounded-t-3xl w-full max-w-[480px] p-5 pb-7 shadow-2xl"
       >
         <div className="mx-auto h-1.5 w-10 rounded-full bg-border mb-4" />
+        {product.photos && product.photos.length > 0 && (
+          <div className="-mx-5 mb-4 px-5 overflow-x-auto">
+            <div className="flex gap-2">
+              {product.photos.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt={`${product.name} ${i+1}`}
+                  className="h-40 w-40 object-cover rounded-2xl shrink-0 border border-border"
+                />
+              ))}
+            </div>
+          </div>
+        )}
         <div className="flex items-start gap-3">
           <div className="h-14 w-14 rounded-2xl bg-primary-soft flex items-center justify-center text-3xl">
             {product.emoji}
