@@ -14,6 +14,7 @@ function RiderHome() {
   const [online, setOnline] = useState(true);
   const [active, setActive] = useState<typeof riderRequests[number] | null>(null);
   const [stage, setStage] = useState(2);
+  const [details, setDetails] = useState<typeof riderRequests[number] | null>(null);
 
   return (
     <MobileShell nav={riderNav} title={online ? "You're online" : "You're offline"}>
