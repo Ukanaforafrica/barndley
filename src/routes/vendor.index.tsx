@@ -3,7 +3,7 @@ import { MobileShell } from "@/components/MobileShell";
 import { vendorNav } from "@/components/VendorNav";
 import { formatNaira } from "@/lib/mock";
 import { useEffect, useState } from "react";
-import { Bell, CircleDollarSign, ShoppingBag, Star, TrendingUp, Link2, Check } from "lucide-react";
+import { CircleDollarSign, ShoppingBag, Star, TrendingUp, Link2, Check } from "lucide-react";
 
 export const Route = createFileRoute("/vendor/")({
   head: () => ({ meta: [{ title: "Shop dashboard — Campus Basket" }] }),
@@ -41,12 +41,7 @@ function VendorHome() {
     <MobileShell
       nav={vendorNav}
       title="Mama Osas Foodstuff"
-      rightSlot={
-        <button className="relative h-9 w-9 rounded-full bg-secondary flex items-center justify-center">
-          <Bell className="size-4"/>
-          <span className="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-accent"/>
-        </button>
-      }
+    
     >
       <div className="card-soft p-4 flex items-center justify-between">
         <div>
