@@ -38,7 +38,7 @@ export type Shop = {
 export const shops: Shop[] = [
   {
     id: "mama-tee",
-    name: "Mama Tee's Foodstuff",
+    name: "Mama Osas Foodstuff",
     emoji: "🥬",
     tagline: "Fresh from Oja-Oba market, daily.",
     rating: 4.8,
@@ -349,7 +349,7 @@ export const orderStages: OrderStatus[] = [
 export const sampleOrders = [
   {
     id: "CB-1042",
-    shop: "Mama Tee's Foodstuff",
+    shop: "Mama Osas Foodstuff",
     items: 4,
     total: 6900,
     status: "Delivering" as OrderStatus,
@@ -400,7 +400,7 @@ export type RiderRequest = {
 export const riderRequests: RiderRequest[] = [
   {
     id: "REQ-771",
-    shop: "Mama Tee's Foodstuff",
+    shop: "Mama Osas Foodstuff",
     shopPhone: "+234 802 990 1245",
     pickup: "Block 4, North Gate Market",
     student: "Adaeze O.",
@@ -437,13 +437,13 @@ export const riderRequests: RiderRequest[] = [
     paymentMethod: "Card · Paid",
     buyerNote: "Combine all into one drop at Mellanby Rm 7.",
     pickups: [
-      { shop: "Mama Tee's Foodstuff", phone: "+234 802 990 1245", address: "Block 4, North Gate Market", items: 2 },
+      { shop: "Mama Osas Foodstuff", phone: "+234 802 990 1245", address: "Block 4, North Gate Market", items: 2 },
       { shop: "Brother K Provisions", phone: "+234 803 220 1188", address: "Stall 9, Campus Gate", items: 3 },
       { shop: "Iya Bunmi Vegetables", phone: "+234 803 117 6620", address: "Stall 12, South Market", items: 1 },
     ],
     lineItems: [
-      { shop: "Mama Tee's Foodstuff", name: "Foreign rice", qty: 1, unit: "cup", price: 1200 },
-      { shop: "Mama Tee's Foodstuff", name: "Beans", qty: 1, unit: "cup", price: 1000 },
+      { shop: "Mama Osas Foodstuff", name: "Foreign rice", qty: 1, unit: "cup", price: 1200 },
+      { shop: "Mama Osas Foodstuff", name: "Beans", qty: 1, unit: "cup", price: 1000 },
       { shop: "Brother K Provisions", name: "Indomie", qty: 1, unit: "carton", price: 6500 },
       { shop: "Brother K Provisions", name: "Eggs", qty: 1, unit: "crate", price: 3800 },
       { shop: "Brother K Provisions", name: "Sachet milk", qty: 1, unit: "pack", price: 900 },
