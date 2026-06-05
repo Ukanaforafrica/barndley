@@ -20,7 +20,7 @@ const roles = [
   {
     id: "student" as const,
     title: "I'm a Student",
-    desc: "Browse shops, build your basket, track your rider.",
+    desc: "Browse shops, \nfill up your basket, track your rider.",
     icon: <GraduationCap className="size-5" />,
     tag: "Most popular",
     accent: "bg-primary-soft",
@@ -116,7 +116,7 @@ function Landing() {
               <span>•</span>
               <span>Multi-shop per cart</span>
               <span>•</span>
-              <span>Fast Payments</span>
+              <span>Bulk Shopping</span>
             </div>
           </div>
 
