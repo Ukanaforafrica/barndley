@@ -4,6 +4,7 @@ import { vendorNav } from "@/components/VendorNav";
 import { formatNaira } from "@/lib/mock";
 import { Wallet, ArrowDownLeft, ArrowUpRight, MapPin, Phone, Mail, LogOut, ChevronRight, Store, Clock, Star } from "lucide-react";
 import { EditProfileButton, useProfile } from "@/components/EditProfileDialog";
+import { useSignOut } from "@/lib/auth-helpers";
 
 export const Route = createFileRoute("/vendor/profile")({
   head: () => ({ meta: [{ title: "You — Shop" }] }),
@@ -22,6 +23,7 @@ function initials(name: string) {
 }
 
 function VendorProfile() {
+  const signOut = useSignOut();
   const [profile, setProfile] = useProfile("cb.vendor.profile", {
     name: "Mama Osas Foodstuff",
     location: "Block 4, North Gate Market",
@@ -94,7 +96,10 @@ function VendorProfile() {
         <Row icon={<Mail className="size-4" />} label="Email" value={profile.email} />
       </div>
 
-      <button className="mt-4 w-full py-3 rounded-xl bg-secondary text-sm font-semibold inline-flex items-center justify-center gap-2">
+      <button
+        onClick={signOut}
+        className="mt-4 w-full py-3 rounded-xl bg-secondary text-sm font-semibold inline-flex items-center justify-center gap-2 hover:bg-secondary/80"
+      >
         <LogOut className="size-4" /> Sign out
       </button>
     </MobileShell>
