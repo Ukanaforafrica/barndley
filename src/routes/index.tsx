@@ -111,7 +111,7 @@ function Landing() {
 
             <div className="mt-8 flex items-center gap-4 text-xs text-foreground/60">
               <span className="inline-flex items-center gap-1.5">
-                <MapPin className="size-3.5" /> Campus-only delivery
+                <MapPin className="size-3.5" /> Hostel delivery
               </span>
               <span>•</span>
               <span>Multi-shop Experience</span>
@@ -159,7 +159,7 @@ function Landing() {
         </section>
 
         <footer className="mt-16 text-center text-xs text-foreground/50">
-          © guorrow — built for Nigerian students. Your next market run starts here.
+          © guorrow - built for Nigerian students. Your next market run starts here.
         </footer>
       </div>
     </div>
