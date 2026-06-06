@@ -30,7 +30,7 @@ function StudentHome() {
           <MapPin className="size-3.5 text-primary" /> Indep. Hall · Rm 214
         </button>
       }
-      title="What's in your basket today, Ada?"
+      title="Hi Ada, your next market run is just a few clicks away."
     >
       <div className="mt-2 relative">
         <Search className="size-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
