@@ -1,2 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-export const Route = createFileRoute("/vendor")({ component: () => <Outlet /> });
+import { BioGate } from "@/components/BioGate";
+
+export const Route = createFileRoute("/vendor")({
+  component: () => (
+    <BioGate>
+      <Outlet />
+    </BioGate>
+  ),
+});
