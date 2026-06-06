@@ -78,10 +78,10 @@ function Landing() {
               </span>
               , fast.
             </h1>
-            <p className="mt-4 text-foreground/70 text-[1.02rem] max-w-[44ch]">
-              From a milk-cup of rice to a full paint of beans - order from
-              nearby shops by the measure that makes sense to you. Your
-              campus rider does the rest.
+            <p className="mt-4 text-foreground/70 text-[1.02rem] max-w-[44ch] whitespace-pre-line">
+              From a milk-cup of rice to a full paint rubber of beans - order from
+              nearby shops by the measure that makes sense to you. {"\n"}
+              Your campus rider does the rest.
             </p>
 
             <div className="mt-7 grid sm:grid-cols-3 gap-3">
