@@ -4,6 +4,7 @@ import { studentNav } from "@/components/StudentNav";
 import { formatNaira } from "@/lib/mock";
 import { Wallet, Plus, ArrowDownLeft, ArrowUpRight, MapPin, Phone, Mail, LogOut, ChevronRight, Shield } from "lucide-react";
 import { EditProfileButton, useProfile } from "@/components/EditProfileDialog";
+import { useSignOut } from "@/lib/auth-helpers";
 
 export const Route = createFileRoute("/student/profile")({
   head: () => ({ meta: [{ title: "You — Campus Basket" }] }),
@@ -22,6 +23,7 @@ function initials(name: string) {
 }
 
 function StudentProfile() {
+  const signOut = useSignOut();
   const [profile, setProfile] = useProfile("cb.student.profile", {
     name: "Adaeze Okafor",
     email: "adaeze.o@uni.edu.ng",
@@ -90,7 +92,10 @@ function StudentProfile() {
         <Row icon={<Shield className="size-4" />} label="Account" value="Verified student" />
       </div>
 
-      <button className="mt-4 w-full py-3 rounded-xl bg-secondary text-sm font-semibold inline-flex items-center justify-center gap-2">
+      <button
+        onClick={signOut}
+        className="mt-4 w-full py-3 rounded-xl bg-secondary text-sm font-semibold inline-flex items-center justify-center gap-2 hover:bg-secondary/80"
+      >
         <LogOut className="size-4" /> Sign out
       </button>
     </MobileShell>
