@@ -3,8 +3,9 @@ import { MobileShell } from "@/components/MobileShell";
 import { studentNav } from "@/components/StudentNav";
 import { cart, useCart, cartTotal, groupByShop, isBundle, cartArea } from "@/lib/cart-store";
 import { shops, formatNaira, type Product, type Measurement, type Shop } from "@/lib/mock";
-import { Minus, Plus, Trash2, ArrowLeft, Search, X, Sparkles, Store, MapPin } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, Search, X, Sparkles, Store, MapPin, Heart, Copy, Share2, Check } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/student/cart")({
   head: () => ({ meta: [{ title: "Your basket — Campus Basket" }] }),
