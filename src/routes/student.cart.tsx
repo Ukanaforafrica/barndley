@@ -143,6 +143,86 @@ function CartPage() {
   );
 }
 
+function encodeBasket(lines: CartLine[]): string {
+  const json = JSON.stringify({ lines });
+  const b64 = btoa(unescape(encodeURIComponent(json)));
+  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function SponsorShareCard({ lines }: { lines: CartLine[] }) {
+  const [copied, setCopied] = useState(false);
+  const link = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}/sponsor/${encodeBasket(lines)}`;
+  }, [lines]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      toast.success("Link copied — share it with your sponsor");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Couldn't copy. Long-press the link to copy manually.");
+    }
+  };
+
+  const share = async () => {
+    const shareData = {
+      title: "Pay for my basket on guorrow",
+      text: "Hey 🙏 please help pay for my market basket on guorrow:",
+      url: link,
+    };
+    if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (d: ShareData) => Promise<void> }).share) {
+      try {
+        await (navigator as Navigator & { share: (d: ShareData) => Promise<void> }).share(shareData);
+      } catch {
+        /* user cancelled */
+      }
+    } else {
+      copy();
+    }
+  };
+
+  return (
+    <div className="mt-4 card-soft p-4 bg-accent-soft border-accent/30">
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center shrink-0">
+          <Heart className="size-5 text-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-display text-base leading-tight">
+            Send basket to parent or guardian
+          </div>
+          <div className="text-xs text-foreground/70 mt-1">
+            Share this link so someone else can make the payment on your behalf.
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 flex items-center gap-2 p-2 pl-3 rounded-xl bg-background border border-border">
+        <div className="flex-1 min-w-0 text-xs text-foreground/70 truncate font-mono">
+          {link}
+        </div>
+        <button
+          onClick={copy}
+          className="shrink-0 inline-flex items-center gap-1 px-3 h-8 rounded-lg bg-secondary text-xs font-semibold"
+        >
+          {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+
+      <button
+        onClick={share}
+        className="mt-3 w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold"
+      >
+        <Share2 className="size-4" /> Share link
+      </button>
+    </div>
+  );
+}
+
 function CrossShopSearch({ onClose }: { onClose: () => void }) {
   const snap = useCart();
   const lockedArea = cartArea(snap.lines);
