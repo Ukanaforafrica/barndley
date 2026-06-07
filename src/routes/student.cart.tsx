@@ -127,9 +127,11 @@ function CartPage() {
             </div>
           </div>
 
+          <SponsorShareCard lines={snap.lines} />
+
           <Link
             to="/student/checkout"
-            className="mt-5 block text-center py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold"
+            className="mt-4 block text-center py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold"
           >
             Proceed to checkout
           </Link>
