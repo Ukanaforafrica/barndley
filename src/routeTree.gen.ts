@@ -27,6 +27,7 @@ import { Route as StudentOrdersRouteImport } from './routes/student.orders'
 import { Route as StudentFavoritesRouteImport } from './routes/student.favorites'
 import { Route as StudentCheckoutRouteImport } from './routes/student.checkout'
 import { Route as StudentCartRouteImport } from './routes/student.cart'
+import { Route as SponsorPayloadRouteImport } from './routes/sponsor.$payload'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as RiderTripsRouteImport } from './routes/rider.trips'
 import { Route as RiderStatementRouteImport } from './routes/rider.statement'
@@ -125,6 +126,11 @@ const StudentCartRoute = StudentCartRouteImport.update({
   path: '/cart',
   getParentRoute: () => StudentRoute,
 } as any)
+const SponsorPayloadRoute = SponsorPayloadRouteImport.update({
+  id: '/sponsor/$payload',
+  path: '/sponsor/$payload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopIdRoute = ShopIdRouteImport.update({
   id: '/shop/$id',
   path: '/shop/$id',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/rider/statement': typeof RiderStatementRoute
   '/rider/trips': typeof RiderTripsRoute
   '/shop/$id': typeof ShopIdRoute
+  '/sponsor/$payload': typeof SponsorPayloadRoute
   '/student/cart': typeof StudentCartRoute
   '/student/checkout': typeof StudentCheckoutRoute
   '/student/favorites': typeof StudentFavoritesRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/rider/statement': typeof RiderStatementRoute
   '/rider/trips': typeof RiderTripsRoute
   '/shop/$id': typeof ShopIdRoute
+  '/sponsor/$payload': typeof SponsorPayloadRoute
   '/student/cart': typeof StudentCartRoute
   '/student/checkout': typeof StudentCheckoutRoute
   '/student/favorites': typeof StudentFavoritesRoute
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/rider/statement': typeof RiderStatementRoute
   '/rider/trips': typeof RiderTripsRoute
   '/shop/$id': typeof ShopIdRoute
+  '/sponsor/$payload': typeof SponsorPayloadRoute
   '/student/cart': typeof StudentCartRoute
   '/student/checkout': typeof StudentCheckoutRoute
   '/student/favorites': typeof StudentFavoritesRoute
@@ -253,6 +262,7 @@ export interface FileRouteTypes {
     | '/rider/statement'
     | '/rider/trips'
     | '/shop/$id'
+    | '/sponsor/$payload'
     | '/student/cart'
     | '/student/checkout'
     | '/student/favorites'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/rider/statement'
     | '/rider/trips'
     | '/shop/$id'
+    | '/sponsor/$payload'
     | '/student/cart'
     | '/student/checkout'
     | '/student/favorites'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/rider/statement'
     | '/rider/trips'
     | '/shop/$id'
+    | '/sponsor/$payload'
     | '/student/cart'
     | '/student/checkout'
     | '/student/favorites'
@@ -328,6 +340,7 @@ export interface RootRouteChildren {
   StudentRoute: typeof StudentRouteWithChildren
   VendorRoute: typeof VendorRouteWithChildren
   ShopIdRoute: typeof ShopIdRoute
+  SponsorPayloadRoute: typeof SponsorPayloadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -458,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentCartRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/sponsor/$payload': {
+      id: '/sponsor/$payload'
+      path: '/sponsor/$payload'
+      fullPath: '/sponsor/$payload'
+      preLoaderRoute: typeof SponsorPayloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop/$id': {
       id: '/shop/$id'
       path: '/shop/$id'
@@ -581,6 +601,7 @@ const rootRouteChildren: RootRouteChildren = {
   StudentRoute: StudentRouteWithChildren,
   VendorRoute: VendorRouteWithChildren,
   ShopIdRoute: ShopIdRoute,
+  SponsorPayloadRoute: SponsorPayloadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
